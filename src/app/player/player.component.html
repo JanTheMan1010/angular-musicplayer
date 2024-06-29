@@ -1,0 +1,10 @@
+<p>player works!</p>
+
+<p>current url: {{ url$ | async }}</p>
+@if(url$ | async) {
+    <audio controls>
+        <!-- <source src="horse.mp3" type="audio/mpeg"> -->
+        <source src="{{ url$ | async }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio> 
+}
