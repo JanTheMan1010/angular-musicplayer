@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, effect, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, filter } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -22,11 +22,20 @@ export class PlayerComponent {
      this.url$.next(value);
   }
 
+    additionalInfo = input.required<number | undefined>();
+
+  
+  
   constructor(){
     this.url$.pipe(takeUntilDestroyed(), filter((val: any)=> val !== undefined))
     .subscribe((val: string | undefined)=>
       console.log(`new value: ${val}`)
     );
+
+    effect(()=>
+      console.log("addInfo: ", this.additionalInfo())
+    );
+
     // effect(()=>{
     //   const url = this.url();
     //    console.log("new url", url);

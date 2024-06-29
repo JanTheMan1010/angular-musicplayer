@@ -1,4 +1,21 @@
 <!-- <router-outlet /> -->
-<app-player [url]="url()"></app-player>
+<app-player [url]="url()" [additionalInfo]="asdfwert"></app-player>
 
 <button (click)="randomize()">NEW URL</button>
+
+<!-- <ng-template #messagecontainer></ng-template> -->
+
+<h1>START</h1>
+@for (item of mylist; track item) {
+    @switch (item) {
+        @case("_PlayerComponent") {
+            <app-player [url]="url()" [additionalInfo]="asdfwert"></app-player>
+        }
+        @default {
+            <h2>-PLACEHOLDER</h2>
+        }
+
+    }
+}
+
+<h1>START</h1>
