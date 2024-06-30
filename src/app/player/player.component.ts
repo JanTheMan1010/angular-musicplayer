@@ -2,6 +2,7 @@ import { Component, Input, effect, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, filter } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { Element } from '../services/music-service.service';
 
 
 @Component({
@@ -13,33 +14,22 @@ import { AsyncPipe } from '@angular/common';
 })
 export class PlayerComponent {
 
-  // url = input<string>();
   cnt = 0;
-  url$ = new BehaviorSubject<string | undefined>(undefined);
+  url$ = new BehaviorSubject<Element | undefined>(undefined);
 
   @Input()
-  set url(value: any){
+  set url(value: Element | undefined){
      this.url$.next(value);
   }
 
-    additionalInfo = input.required<number | undefined>();
-
-  
+  additionalInfo = input.required<number | undefined>();
   
   constructor(){
     this.url$.pipe(takeUntilDestroyed(), filter((val: any)=> val !== undefined))
-    .subscribe((val: string | undefined)=>
-      console.log(`new value: ${val}`)
+    .subscribe((val: Element | undefined)=>
+      console.log(`new value: ${val?.name} / ${val?.path}`)
     );
 
-    effect(()=>
-      console.log("addInfo: ", this.additionalInfo())
-    );
-
-    // effect(()=>{
-    //   const url = this.url();
-    //    console.log("new url", url);
-    // });
   }
 
 }

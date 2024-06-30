@@ -1,11 +1,17 @@
-import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PlayerComponent } from './player/player.component';
+import { FolderviewComponent } from './folderview/folderview.component';
+import { Content, Element, MusicService
+ } from './services/music-service.service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, PlayerComponent],
+  imports: [RouterOutlet, PlayerComponent, FolderviewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -19,28 +25,18 @@ asdfwert: any;
 
   title = 'angular-musicplayer';
 
-  url = signal<undefined | string>(undefined);
-  componentRef: any;
+  selectedFile = signal<Element | undefined>(undefined);
 
-  mylist = ["asdf", PlayerComponent.name, PlayerComponent.name, "asf"];
+  currentPath = signal("/");
+  content = signal<Content | undefined>(undefined);
   
-  @ViewChild('messagecontainer', { read: ViewContainerRef }) entry: ViewContainerRef;
-  constructor() {
-    this.randomize();
+  constructor(private musicSrv: MusicService) {
+    toObservable(this.currentPath)
+    .pipe(takeUntilDestroyed(), filter(val => val !== undefined))
+    .subscribe(async (src: string)=> {
+      this.content.set(await this.musicSrv.getContent(src))
+      this.selectedFile.set(this.content()?.files?.[0]);
+    });
+  }
     
-  }
-  
-  ngAfterContentInit() {
-    setTimeout(() => {
-      // const comp = this.entry.createComponent(PlayerComponent);   
-      // instance.url="iiiioo";
-      // comp.setInput("url", "iiiioo");
-    }, 100);
-      
-   }
-
-  randomize(): void {
-    const idx = Math.floor(Math.random() * (this.urls.length - 1));
-    this.url.set(this.urls[idx]);
-  }
 }
